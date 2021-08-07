@@ -17,59 +17,11 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 #app=Flask(__name__)
 #Swagger(app)
-pickle_in = open("D:/sentimentanalyzer/classifier.pkl","rb")
+pickle_in = open("classifier.pkl","rb")
 clf=pickle.load(pickle_in)
-cv = pickle.load(open('D:/sentimentanalyzer/corpus.pkl','rb'))
+cv = pickle.load(open('corpus.pkl','rb'))
 def welcome():
     return "Welcome All"
-def cleaning(review):
-    import re
-#Removing the html strips
-    def strip_html(text):
-         return re.sub('(<br\s*/><br\s*/>)|(\-)|(\/)', '', text)
-    #Removing the square brackets
-    def remove_between_square_brackets(text):
-            return re.sub('[.;:!\'?,\"()\[\]]', '', text)
-    #Removing the noisy text
-    def denoise_text(text):
-            text = strip_html(text)
-            text = remove_between_square_brackets(text)
-            return text
-    #Apply function on review column
-    review=denoise_text(review)
-    def remove_special_characters(text, remove_digits=True):
-            pattern=r'[^a-zA-z0-9\s]'
-            text=re.sub(pattern,'',text)
-            return text
-    #Apply function on review column
-    review=remove_special_characters(review)
-    import nltk
-    from nltk.corpus import stopwords
-    from nltk.tokenize import word_tokenize 
-    stop_words = set(stopwords.words('english'))
-    def remove(text):
-            word_tokens = word_tokenize(text) 
-            filtered_sentence = [w for w in word_tokens if not w in stop_words]   
-            filtered_sentence = []  
-            for w in word_tokens: 
-                if w not in stop_words: 
-                    filtered_sentence.append(w) 
-            filter1=' '.join(filtered_sentence)
-            return filter1
-    review=remove(review)
-    from nltk.stem import WordNetLemmatizer 
-    lemmatizer = WordNetLemmatizer()
-    def lemma(text):
-             word_tokens = word_tokenize(text)
-             lemmatized_output = ' '.join([lemmatizer.lemmatize(w) for w in word_tokens])
-             return lemmatized_output
-    review1=lemma(review)
-    list1=[" "]
-    list1[0]=review1
-    from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.feature_extraction.text import CountVectorizer
-    c=cv.transform(list1)
-    return c
 def predict(new_review):
         new_review = re.sub('[^a-zA-Z]', ' ', new_review)
         new_review = new_review.lower()
