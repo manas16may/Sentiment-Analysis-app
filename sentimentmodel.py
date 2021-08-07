@@ -19,7 +19,9 @@ import pickle
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('wordnet')
-data=pd.read_csv('D:/sentimentanalyzer/IMDB Dataset.csv')
+import zipfile
+zf = zipfile.ZipFile('IMDB Dataset.zip') 
+data=pd.read_csv(zf.open('IMDB Dataset.csv'))
 data=data[:5000]
 d={"sentiment":{"positive":1,"negative":0}}
 data=data.replace(d)
